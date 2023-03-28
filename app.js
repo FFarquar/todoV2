@@ -407,10 +407,13 @@ app.get("/about", function(req, res){
   res.render("about");
 });
 
-app.listen(3000, function() {
+/* app.listen(3000, function() {
   console.log("Server started on port 3000");
 });
-
+ */
+app.listen(process.env.PORT || 3000, function(){
+  console.log("server is running on port "+ process.env.PORT)
+})
 
 ///////////////////////////////////////////////////
 //All this code is to ensure the connection to the database is closed when the app stops running
