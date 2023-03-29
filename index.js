@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 //const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -27,7 +28,7 @@ const listScehma = new mongoose.Schema({
 
 const list_m = mongoose.model("List", listScehma);
 
-let db;
+//let db;
 
 addDefaultItems();
 
@@ -37,13 +38,26 @@ addDefaultItems();
 // const workItems = [];
 
 
+const db = async () => {
+  try {
+    //const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect('mongodb+srv://DD_1:DD_1_PW@cluster1.eiy6kz9.mongodb.net/test');
+    
+    console.log('MonoDB Connected: ${conn.connection.host}');
+      
+    } catch (error) {
+    console.log(error);
+    preocces.exit(1);
+  }
+
+}
 
 async function addDefaultItems() {
 
   
   //const db = await mongoose.connect('mongodb://127.0.0.1:27017/todoListDB');
   //db = await mongoose.connect('mongodb://127.0.0.1:27017/todoListDB');
-  db = await mongoose.connect('mongodb+srv://DD_1:DD_1_PW@cluster1.eiy6kz9.mongodb.net/test')
+//  db = await mongoose.connect('mongodb+srv://DD_1:DD_1_PW@cluster1.eiy6kz9.mongodb.net/test')
 
 
   console.log("Connected");
@@ -413,9 +427,16 @@ app.get("/about", function(req, res){
   console.log("Server started on port 3000");
 });
  */
-app.listen(process.env.PORT || 3000, function(){
+
+/* app.listen(process.PORT || 3000, () => {
   console.log("server is running on port "+ process.env.PORT)
-})
+}) */
+  
+db().then(() => {
+  app.listen(process.env.PORT || 3000, function(){
+    console.log("server is running on port "+ process.env.PORT)
+  })
+});
 
 ///////////////////////////////////////////////////
 //All this code is to ensure the connection to the database is closed when the app stops running
